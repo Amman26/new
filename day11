@@ -1,419 +1,157 @@
-login_page
+components/side_menu.py  __init__.py   components/, pages/, and tests/
 
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+class SideMenuComponent:
+    def __init__(self, driver):
+        self.driver = driver
+        self.admin_menu = (By.XPATH, "//span[text()='Admin']")
+        self.pim_menu = (By.XPATH, "//span[text()='PIM']")
+        self.leave_menu = (By.XPATH, "//span[text()='Leave']")
+
+    def navigate_to_admin(self):
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(self.admin_menu)).click()
+
+    def navigate_to_pim(self):
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(self.pim_menu)).click()
+
+    def navigate_to_leave(self):
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(self.leave_menu)).click()
+
+pages/login_page.py.
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from pages.dashboard_page import DashboardPage
 
-
 class LoginPage:
-
-    USERNAME = (By.NAME, "username")
-    PASSWORD = (By.NAME, "password")
-    LOGIN_BUTTON = (By.XPATH, "//button[@type='submit']")
-
     def __init__(self, driver):
-
         self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
-
-    def open_url(self):
-
-        self.driver.get(
-            "https://opensource-demo.orangehrmlive.com/"
-        )
-
-    def enter_username(self, username):
-
-        self.wait.until(
-            EC.visibility_of_element_located(
-                self.USERNAME
-            )
-        ).send_keys(username)
-
-    def enter_password(self, password):
-
-        self.driver.find_element(
-            *self.PASSWORD
-        ).send_keys(password)
-
-    def click_login(self):
-
-        self.driver.find_element(
-            *self.LOGIN_BUTTON
-        ).click()
+        self.username_locator = (By.NAME, "username")
+        self.password_locator = (By.NAME, "password")
+        self.login_button = (By.XPATH, "//button[@type='submit']")
 
     def login(self, username, password):
-
-        self.enter_username(username)
-
-        self.enter_password(password)
-
-        self.click_login()
-
+        wait = WebDriverWait(self.driver, 10)
+        wait.until(EC.presence_of_element_located(self.username_locator)).send_keys(username)
+        self.driver.find_element(*self.password_locator).send_keys(password)
+        self.driver.find_element(*self.login_button).click()
         return DashboardPage(self.driver)
-
-dashboard_page.py
-          
+pages/dashboard_page.py
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from pages.pim_page import PIMPage
-
 
 class DashboardPage:
-
-    PIM_MENU = (
-        By.XPATH,
-        "//span[text()='PIM']"
-    )
-
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
+        self.dashboard_heading = (By.XPATH, "//h6[contains(., 'Dashboard')]")
+        self._verify_page_loaded()
 
-    def go_to_pim(self):
+    def _verify_page_loaded(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(self.dashboard_heading)
+        )
 
-        self.wait.until(
-            EC.element_to_be_clickable(self.PIM_MENU)
-        ).click()
-
-        return PIMPage(self.driver)
-
-  admin_page.py
-
+pages/admin_page.py
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from components.side_menu import SideMenuComponent
 
 class AdminPage:
-
-    ADMIN_MENU = (
-        By.XPATH,
-        "//span[text()='Admin']"
-    )
-
-    USERNAMES = (
-        By.XPATH,
-        "//div[@role='row']//div[@role='cell'][2]"
-    )
-
     def __init__(self, driver):
-
         self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
-
-    def open_admin_page(self):
-
-        self.wait.until(
-            EC.element_to_be_clickable(
-                self.ADMIN_MENU
-            )
-        ).click()
-
-    def get_all_usernames(self):
-
-        self.wait.until(
-            EC.visibility_of_all_elements_located(
-                self.USERNAMES
-            )
+        self.sidebar = SideMenuComponent(self.driver)
+        self.username_column_elements = (By.XPATH, "//div[@class='oxd-table-body']//div[@role='row']/div[2]/div")
+        
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, "//h6[text()='Admin']"))
         )
 
-        return self.driver.find_elements(
-            *self.USERNAMES
-        )
-
-    def verify_user_exists(self, expected_user):
-
-        usernames = self.get_all_usernames()
-
-        for user in usernames:
-
-            if user.text == expected_user:
+    def verify_user_exists(self, target_username):
+        wait = WebDriverWait(self.driver, 10)
+        elements = wait.until(EC.presence_of_all_elements_located(self.username_column_elements))
+        for element in elements:
+            if element.text == target_username:
                 return True
-
         return False
-
-pim_page.py
-
-          
-from selenium import webdriver
-from pages.login_page import LoginPage
+pages/pim_page.py
 
 
-def test_pim_navigation():
-
-    driver = webdriver.Chrome()
-
-    driver.maximize_window()
-
-    # Login Page
-    login_page = LoginPage(driver)
-
-    login_page.open_url()
-
-    # Dashboard Page
-    dashboard_page = login_page.login(
-        "Admin",
-        "admin123"
-    )
-
-    # PIM Page
-    pim_page = dashboard_page.go_to_pim()
-
-    # Personal Details Page
-    personal_details_page = pim_page.view_employee_details(
-        "Linda"
-    )
-
-    assert personal_details_page.is_personal_details_displayed()
-
-    print("Employee Details Opened Successfully")
-
-    driver.quit()
-
-          
-presonal_details_page.py
-          
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 
 class PersonalDetailsPage:
-
-    PERSONAL_DETAILS_HEADER = (
-        By.XPATH,
-        "//h6[text()='Personal Details']"
-    )
-
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
-
-    def is_personal_details_displayed(self):
-
-        return self.wait.until(
-            EC.visibility_of_element_located(
-                self.PERSONAL_DETAILS_HEADER
-            )
-        ).is_displayed()
-
-leave_page.py
-from components.side_menu_component import SideMenuComponent
-
-
-class LeavePage:
-
-    def __init__(self, driver):
-        self.driver = driver
-
-        # Reusable component
-        self.side_menu = SideMenuComponent(driver)
-
-side_menu_component.py
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-
-class SideMenuComponent:
-
-    ADMIN_MENU = (
-        By.XPATH,
-        "//span[text()='Admin']"
-    )
-
-    LEAVE_MENU = (
-        By.XPATH,
-        "//span[text()='Leave']"
-    )
-
-    PIM_MENU = (
-        By.XPATH,
-        "//span[text()='PIM']"
-    )
-
-    SEARCH_BOX = (
-        By.XPATH,
-        "//input[@placeholder='Search']"
-    )
-
-    def __init__(self, driver):
-        self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
-
-    def click_admin(self):
-
-        self.wait.until(
-            EC.element_to_be_clickable(
-                self.ADMIN_MENU
-            )
-        ).click()
-
-    def click_leave(self):
-
-        self.wait.until(
-            EC.element_to_be_clickable(
-                self.LEAVE_MENU
-            )
-        ).click()
-
-    def click_pim(self):
-
-        self.wait.until(
-            EC.element_to_be_clickable(
-                self.PIM_MENU
-            )
-        ).click()
-
-    def search_menu(self, menu_name):
-
-        search = self.wait.until(
-            EC.visibility_of_element_located(
-                self.SEARCH_BOX
-            )
+        self.personal_details_header = (By.XPATH, "//h6[text()='Personal Details']")
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(self.personal_details_header)
         )
 
-        search.clear()
-        search.send_keys(menu_name)
+class PIMPage:
+    def __init__(self, driver):
+        self.driver = driver
+        self.employee_record_xpath = "//div[contains(@class, 'oxd-table-row')]//div[contains(text(), '{}')]"
 
-test_user_validation.py
+    def view_employee_details(self, name):
+        dynamic_locator = (By.XPATH, self.employee_record_xpath.format(name))
+        wait = WebDriverWait(self.driver, 10)
+        element = wait.until(EC.element_to_be_clickable(dynamic_locator))
+        element.click()
+        return PersonalDetailsPage(self.driver)
 
-from selenium import webdriver
+tests/test_orangehrm.py
 import pytest
+from selenium import webdriver
+from selenium.webdriver.edge.service import Service as EdgeService
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
+
+# Import the Page Objects and Components
 from pages.login_page import LoginPage
+from pages.admin_page import AdminPage
+from pages.pim_page import PIMPage
+from components.side_menu import SideMenuComponent
 
-
-# Data Provider
-@pytest.mark.parametrize(
-    "username_to_check",
-    [
-        ("Admin"),
-        ("Paul Collings"),
-        ("InvalidUser")
-    ]
-)
-def test_verify_user(username_to_check):
-
-    driver = webdriver.Chrome()
-
+# 1. Create a fixture to keep the browser open across multiple tests
+@pytest.fixture(scope="module")
+def driver():
+    # Setup for Microsoft Edge
+    driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()))
+    driver.get("https://opensource-demo.orangehrmlive.com/")
     driver.maximize_window()
-
-    login_page = LoginPage(driver)
-
-    login_page.open_url()
-
-    admin_page = login_page.login(
-        "Admin",
-        "admin123"
-    )
-
-    admin_page.open_admin_page()
-
-    user_exists = admin_page.verify_user_exists(
-        username_to_check
-    )
-
-    print(
-        f"Checking User: {username_to_check}"
-    )
-
-    print(
-        f"Exists: {user_exists}"
-    )
-
+    
+    yield driver  # Hands the driver to the tests
+    
+    # Teardown: Closes browser after all tests in this file finish
     driver.quit()
 
-tests/test_component_architecture.py
-from selenium import webdriver
-from pages.login_page import LoginPage
 
-
-def test_sidebar_component():
-
-    driver = webdriver.Chrome()
-
-    driver.maximize_window()
-
+# 2. Break the exercises into separate test functions
+def test_exercises_1_and_2_login(driver):
+    """Tests the POM Login and Dashboard Synchronization"""
     login_page = LoginPage(driver)
+    login_page.login("Admin", "admin123")
+    assert "dashboard" in driver.current_url.lower(), "Failed to reach Dashboard"
 
-    login_page.open_url()
+def test_exercises_4_and_5_admin_data_driven(driver):
+    """Tests Component Architecture and Data Driven Verification"""
+    side_menu = SideMenuComponent(driver)
+    side_menu.navigate_to_admin()
+    
+    admin_page = AdminPage(driver)
+    user_exists = admin_page.verify_user_exists("Admin")
+    assert user_exists is True, "Target user was not found in the Admin table."
 
-    admin_page = login_page.login(
-        "Admin",
-        "admin123"
-    )
-
-    # Using reusable sidebar component
-    admin_page.side_menu.search_menu("Leave")
-
-    admin_page.side_menu.click_leave()
-
-    print("Sidebar Component Working Successfully")
-
-    driver.quit()
-
-test_pim_navigation.py
-
-from selenium import webdriver
-from pages.login_page import LoginPage
-
-
-def test_pim_navigation():
-
-    driver = webdriver.Chrome()
-
-    driver.maximize_window()
-
-    # Login Page
-    login_page = LoginPage(driver)
-
-    login_page.open_url()
-
-    # Dashboard Page
-    dashboard_page = login_page.login(
-        "Admin",
-        "admin123"
-    )
-
-    # PIM Page
-    pim_page = dashboard_page.go_to_pim()
-
-    # Personal Details Page
-    personal_details_page = pim_page.view_employee_details(
-        "Linda"
-    )
-
-    assert personal_details_page.is_personal_details_displayed()
-
-    print("Employee Details Opened Successfully")
-
-    driver.quit()      
-
-test_login.py
-from selenium import webdriver
-from pages.login_page import LoginPage
-
-
-def test_login():
-
-    driver = webdriver.Chrome()
-
-    driver.maximize_window()
-
-    login_page = LoginPage(driver)
-
-    login_page.open_url()
-
-    dashboard_page = login_page.login(
-        "Admin",
-        "admin123"
-    )
-
-    assert dashboard_page.get_dashboard_text() == "Dashboard"
-
-    print("Login Successful")
-
-    driver.quit()      
+def test_exercise_3_pim_chaining(driver):
+    """Tests Multi-Page Navigation and Object Chaining"""
+    side_menu = SideMenuComponent(driver)
+    side_menu.navigate_to_pim()
+    
+    pim_page = PIMPage(driver)
+    personal_details = pim_page.view_employee_details("Odis")
+    assert personal_details is not None, "Failed to navigate to Personal Details"
