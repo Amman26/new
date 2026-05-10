@@ -106,27 +106,36 @@ class PIMPage:
         return PersonalDetailsPage(self.driver)
 
 tests/test_orangehrm.py
+
 import pytest
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service as EdgeService
-from webdriver_manager.microsoft import EdgeChromiumDriverManager
+#from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
 
 # Import the Page Objects and Components
 from pages.login_page import LoginPage
 from pages.admin_page import AdminPage
 from pages.pim_page import PIMPage
-from components.side_menu import SideMenuComponent
+from components.side_menu_component import SideMenuComponent
+
 
 # 1. Create a fixture to keep the browser open across multiple tests
 @pytest.fixture(scope="module")
 def driver():
     # Setup for Microsoft Edge
-    driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()))
+    service = EdgeService(executable_path="msedgedriver.exe")
+    driver = webdriver.Edge(service=service)
+
     driver.get("https://opensource-demo.orangehrmlive.com/")
     driver.maximize_window()
-    
+
     yield driver  # Hands the driver to the tests
-    
+
     # Teardown: Closes browser after all tests in this file finish
     driver.quit()
 
@@ -138,43 +147,58 @@ def test_exercises_1_and_2_login(driver):
     login_page.login("Admin", "admin123")
     assert "dashboard" in driver.current_url.lower(), "Failed to reach Dashboard"
 
+
 def test_exercises_4_and_5_admin_data_driven(driver):
     """Tests Component Architecture and Data Driven Verification"""
     side_menu = SideMenuComponent(driver)
     side_menu.navigate_to_admin()
-    
+
     admin_page = AdminPage(driver)
     user_exists = admin_page.verify_user_exists("Admin")
     assert user_exists is True, "Target user was not found in the Admin table."
 
+
 def test_exercise_3_pim_chaining(driver):
     """Tests Multi-Page Navigation and Object Chaining"""
-    side_menu = SideMenuComponent(driver)
+    # Exercise 3: Chaining and Multi-page
+    side_menu =SideMenuComponent(driver)
     side_menu.navigate_to_pim()
-    
+
     pim_page = PIMPage(driver)
-    personal_details = pim_page.view_employee_details("Odis")
+
+
+    # 1. Look at the very first row in the table and grab the text from the "First Name" column
+    first_name_locator = (By.XPATH, "(//div[@class='oxd-table-body']//div[@role='row'])[1]//div[@role='cell'][3]")
+    wait = WebDriverWait(driver, 10)
+
+    first_available_name = wait.until(EC.visibility_of_element_located(first_name_locator)).text
+
+    print(f"\nDynamically found employee: {first_available_name}")
+
+    # 2. Pass that name into your existing function
+    personal_details = pim_page.view_employee_details(first_available_name)
+    # ----------------------------
+
     assert personal_details is not None, "Failed to navigate to Personal Details"
 
-...
-# Exercise 3: Chaining and Multi-page
-        side_menu.navigate_to_pim()
-        pim_page = PIMPage(driver)
-        
-        # --- NEW BULLETPROOF CODE ---
-        from selenium.webdriver.common.by import By
-        from selenium.webdriver.support.ui import WebDriverWait
-        from selenium.webdriver.support import expected_conditions as EC
 
-        # 1. Look at the very first row in the table and grab the text from the "First Name" column
-        first_name_locator = (By.XPATH, "(//div[@class='oxd-table-body']//div[@role='row'])[1]//div[@role='cell'][3]")
-        wait = WebDriverWait(driver, 10)
-        first_available_name = wait.until(EC.visibility_of_element_located(first_name_locator)).text
-        
-        print(f"\nDynamically found employee: {first_available_name}")
-        
-        # 2. Pass that name into your existing function
-        personal_details = pim_page.view_employee_details(first_available_name)
-        # ----------------------------
 
-        assert personal_details is not None, "Failed to navigate to Personal Details"
+
+PS C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 11> pytest -v -s
+=============================================================================== test session starts ===============================================================================
+platform win32 -- Python 3.14.4, pytest-9.0.3, pluggy-1.6.0 -- C:\Program Files\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 11
+collected 3 items                                                                                                                                                                  
+
+tests/test_orangehrm.py::test_exercises_1_and_2_login 
+DevTools listening on ws://127.0.0.1:56790/devtools/browser/17e61a2b-0fa1-4b15-a51c-4a367676d6e8
+[11024:2552:0510/110709.515:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
+PASSED
+tests/test_orangehrm.py::test_exercises_4_and_5_admin_data_driven PASSED
+tests/test_orangehrm.py::test_exercise_3_pim_chaining 
+Dynamically found employee: 1
+PASSED
+
+=============================================================================== 3 passed in 15.01s ================================================================================
+PS C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 11> 
