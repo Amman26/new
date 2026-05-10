@@ -1,47 +1,47 @@
-from behave import when, then
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
-import time
+PS C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 13> behave
+USING RUNNER: behave.runner:Runner
+Feature: OrangeHRM Automation Testing # features/orangehrm.feature:1
 
-@when('I apply for exactly one day of leave')
-def step_impl(context):
-    # Increased wait time to 15 seconds to be extra safe
-    wait = WebDriverWait(context.driver, 15) 
-    
-    # 1. Give the "Apply Leave" page time to load
-    time.sleep(3) 
-    
-    # 2. Bulletproof XPath: Looks for any label containing "Leave Type" and finds the dropdown next to it
-    dropdown_xpath = "//label[contains(text(), 'Leave Type')]/ancestor::div[contains(@class, 'oxd-input-group')]//div[contains(@class, 'oxd-select-text')]"
-    
-    dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, dropdown_xpath)))
-    dropdown.click()
-    time.sleep(1)
-    
-    # 3. Send arrow keys directly to the browser body to select the first option
-    body = context.driver.find_element(By.TAG_NAME, 'body')
-    body.send_keys(Keys.ARROW_DOWN)
-    time.sleep(0.5)
-    body.send_keys(Keys.ENTER)
-    
-    # 4. Wait for the balance text to dynamically appear
-    time.sleep(2) 
-    
-    # 5. Capture the balance
-    try:
-        balance_xpath = "//*[contains(text(), 'Leave Balance')]/ancestor::div[contains(@class, 'oxd-input-group')]//p"
-        balance_element = context.driver.find_element(By.XPATH, balance_xpath)
-        # Extract just the number (e.g., from "10.00 Day(s)" -> 10.0)
-        context.initial_balance = float(balance_element.text.split(' ')[0])
-    except:
-        context.initial_balance = 0.0 # Fallback if no balance is available
+  Feature: OrangeHRM Automation Testing  # features/orangehrm.feature:1
 
-@then('I capture the success toast message')
-def step_impl(context):
-    pass 
+DevTools listening on ws://127.0.0.1:53762/devtools/browser/46bac764-55fa-4bba-9f95-42e5948bcde7
 
-@then('exactly one day of leave should be deducted')
-def step_impl(context):
-    pass
+  Scenario: User Authentication                                # features/orangehrm.feature:9
+    Given I navigate to the OrangeHRM login page               # features/steps/login_steps.py:6
+    Then I should be logged in successfully                    # features/steps/login_steps.py:18 0.011svery renderer should have at least one task provided by a primary task provi
+    Then I should be logged in successfully                    # features/steps/login_steps.py:18new bug and tag it as a dependency of crbug.com/40528867.
+DevTools listening on ws://127.0.0.1:65475/devtools/browser/0ed7aa8d-69bd-4e86-9a22-1044d64ce03c
+
+  Scenario Outline: Employee Creation -- @1.1                  # features/orangehrm.feature:21
+    Given I navigate to the OrangeHRM login page               # features/steps/login_steps.py:6
+    And I enter "Alice" and "Smith"                            # features/steps/pim_steps.py:7 0.307s5 1.489senderer should have at least one task provided by a primary task provid
+    And I enter "Alice" and "Smith"                            # features/steps/pim_steps.py:7ps.py:15g and tag it as a dependency of crbug.com/40528867.
+DevTools listening on ws://127.0.0.1:64995/devtools/browser/af1cb1a2-be12-4ae2-8bc0-f477f71c0eea
+
+  Scenario Outline: Employee Creation -- @1.2                  # features/orangehrm.feature:22
+    Given I navigate to the OrangeHRM login page               # features/steps/login_steps.py:6
+    And I enter "John" and "Doe"                               # features/steps/pim_steps.py:7 0.292s5 1.528srenderer should have at least one task provided by a primary task provi
+    And I enter "John" and "Doe"                               # features/steps/pim_steps.py:7ps.py:15ug and tag it as a dependency of crbug.com/40528867.
+DevTools listening on ws://127.0.0.1:56261/devtools/browser/297cfa4b-359e-43fc-9cb1-e3c8fcf968f6
+
+  Scenario: Admin Search using Data Tables                     # features/orangehrm.feature:25
+    Given I navigate to the OrangeHRM login page               # features/steps/login_steps.py:6
+    And I enter the following search criteria:                 # features/steps/admin_steps.py:5 0.158s.566s renderer should have at least one task provided by a primary task provi
+      | Username | User Role | Status  |teria:                 # features/steps/admin_steps.py:5.py:7bug and tag it as a dependency of crbug.com/40528867.
+      | Admin    | Admin     | Enabled |
+      | EssUser  | ESS       | Enabled |
+      | EssUser  | ESS       | Enabled |
+DevTools listening on ws://127.0.0.1:52675/devtools/browser/7e53b16d-d881-496d-bfde-f197a6629487
+
+    And exactly one day of leave should be deducted            # features/steps/leave_steps.py:48 0.000s.502s
+    And exactly one day of leave should be deducted            # features/steps/leave_steps.py:48py:15
+DevTools listening on ws://127.0.0.1:62105/devtools/browser/a7f46077-4cfd-458d-8262-a86428458273
+
+  Scenario: Profile Update File Upload                         # features/orangehrm.feature:43
+    Given I navigate to the OrangeHRM login page               # features/steps/login_steps.py:6
+    And I upload my new profile picture                        # features/steps/profile_steps.py:9 1.585s17s renderer should have at least one task provided by a primary task provi
+    And I upload my new profile picture                        # features/steps/profile_steps.py:9y:7bug and tag it as a dependency of crbug.com/40528867.
+1 feature passed, 0 failed, 0 skipped
+6 scenarios passed, 0 failed, 0 skipped
+28 steps passed, 0 failed, 0 skipped
+Took 1min 9.551s
