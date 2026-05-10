@@ -1,0 +1,178 @@
+environment.py
+
+from selenium import webdriver
+import os
+
+# Challenge: Implement Cucumber Hooks (@Before and @After)[cite: 28].
+def before_scenario(context, scenario):
+    """
+    The @Before hook should maximize the browser[cite: 29].
+    In Python's behave framework, this is handled by before_scenario.
+    """
+    context.driver = webdriver.Chrome()
+    context.driver.maximize_window()
+
+def after_scenario(context, scenario):
+    """
+    The @After hook should take a screenshot if the scenario fails before quitting the driver[cite: 29].
+    """
+    if scenario.status == "failed":
+        screenshot_name = f"{scenario.name.replace(' ', '_')}_failed.png"
+        context.driver.save_screenshot(screenshot_name)
+    
+    context.driver.quit()  
+
+login_steps.py
+
+from behave import given, when, then
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+@given('I navigate to the OrangeHRM login page')
+def step_impl(context):
+    target_url = "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
+    context.driver.get(target_url)
+
+@when('I login with username "{username}" and password "{password}"')
+def step_impl(context, username, password):
+    wait = WebDriverWait(context.driver, 10)
+    wait.until(EC.visibility_of_element_located((By.NAME, "username"))).send_keys(username)
+    context.driver.find_element(By.NAME, "password").send_keys(password)
+    context.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+
+@then('I should be logged in successfully')
+def step_impl(context):
+    WebDriverWait(context.driver, 10).until(EC.url_contains("dashboard"))
+    assert "dashboard" in context.driver.current_url, f"Login failed. Current URL: {context.driver.current_url}"
+
+pim_steps.py
+
+      from behave import when
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+@when('I enter "{first_name}" and "{last_name}"')
+def step_impl(context, first_name, last_name):
+    wait = WebDriverWait(context.driver, 10)
+    wait.until(EC.visibility_of_element_located((By.NAME, "firstName"))).send_keys(first_name)
+    context.driver.find_element(By.NAME, "lastName").send_keys(last_name)
+    
+    # Explicit Wait to ensure the "Save" button is clickable
+    save_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']")))
+    save_button.click()
+
+      
+admin_steps.py   
+
+      from behave import when
+from selenium.webdriver.common.by import By
+
+@when('I enter the following search criteria:')
+def step_impl(context):
+    # Iterate through the dictionary provided by the data table
+    for row in context.table:
+        username = row.get("Username")
+        user_role = row.get("User Role")
+        status = row.get("Status")
+        
+        if username:
+            context.driver.find_element(By.XPATH, "//label[text()='Username']/../following-sibling::div/input").send_keys(username)
+        
+        if user_role:
+            pass # Implement Dropdown logic for User Role
+            
+        if status:
+            pass # Implement Dropdown logic for Status
+
+      leave_steps.py
+
+      from behave import when, then
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+@when('I apply for exactly one day of leave')
+def step_impl(context):
+    # Store the Initial Leave Balance
+    initial_balance_text = context.driver.find_element(By.ID, "leaveBalance").text
+    context.initial_balance = int(initial_balance_text)
+    
+    # Implement actual leave application clicking logic here
+
+@then('I capture the success toast message')
+def step_impl(context):
+    wait = WebDriverWait(context.driver, 10)
+    success_toast = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".oxd-toast-content--success")))
+    context.success_message = success_toast.text
+
+@then('exactly one day of leave should be deducted')
+def step_impl(context):
+    # Compare against Final Leave Balance
+    final_balance_text = context.driver.find_element(By.ID, "leaveBalance").text
+    final_balance = int(final_balance_text)
+    
+    assert context.initial_balance - final_balance == 1, f"Expected 1 day deducted, got {context.initial_balance - final_balance}"
+
+
+      profile_steps.py
+
+      from behave import when
+from selenium.webdriver.common.by import By
+import os
+
+@when('I upload my new profile picture')
+def step_impl(context):
+    upload_element = context.driver.find_element(By.CSS_SELECTOR, "input[type='file']")
+    
+    # Pass the absolute file path of the image to the upload element
+    absolute_file_path = os.path.abspath("test_data/profile_image.jpg")
+    upload_element.send_keys(absolute_file_path)
+
+     orangehrm.feature 
+
+      Feature: OrangeHRM Automation Testing
+
+  Background: 
+    # This runs before every scenario to save us from rewriting the navigation steps
+    Given I navigate to the OrangeHRM login page
+
+  # --- Assignment 1 ---
+  Scenario: User Authentication
+    When I login with username "Admin" and password "admin123"
+    Then I should be logged in successfully
+
+  # --- Assignment 2 ---
+  Scenario Outline: Employee Creation
+    # Note: You would normally navigate to the PIM module here first
+    When I login with username "Admin" and password "admin123"
+    And I enter "<FirstName>" and "<LastName>"
+    
+    Examples:
+      | FirstName | LastName |
+      | John      | Doe      |
+      | Jane      | Smith    |
+
+  # --- Assignment 3 ---
+  Scenario: Admin Search using Data Tables
+    # Note: You would normally navigate to the Admin module here first
+    When I login with username "Admin" and password "admin123"
+    And I enter the following search criteria:
+      | Username | User Role | Status  |
+      | Admin    | Admin     | Enabled |
+      | EssUser  | ESS       | Enabled |
+
+  # --- Assignment 4 ---
+  Scenario: Leave Workflow State Verification
+    # Note: You would normally navigate to the Leave module here first
+    When I login with username "Admin" and password "admin123"
+    And I apply for exactly one day of leave
+    Then I capture the success toast message
+    And exactly one day of leave should be deducted
+
+  # --- Assignment 5 ---
+  Scenario: Profile Update File Upload
+    # Note: You would normally navigate to My Info here first
+    When I login with username "Admin" and password "admin123"
+    And I upload my new profile picture
