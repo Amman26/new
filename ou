@@ -1,73 +1,88 @@
-leave_steps.py
+PS C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 13> behave
+USING RUNNER: behave.runner:Runner
+Feature: OrangeHRM Automation Testing # features/orangehrm.feature:1
 
-from behave import when, then
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
-import time
+  Feature: OrangeHRM Automation Testing  # features/orangehrm.feature:1
 
-@when('I apply for exactly one day of leave')
-def step_impl(context):
-    wait = WebDriverWait(context.driver, 10)
-    
-    # 1. Click the 'Leave Type' dropdown
-    dropdown = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "oxd-select-text")))
-    dropdown.click()
-    
-    # 2. Press Arrow Down and Enter to select the first available leave type
-    active_element = context.driver.switch_to.active_element
-    active_element.send_keys(Keys.ARROW_DOWN)
-    active_element.send_keys(Keys.ENTER)
-    
-    # 3. Wait a second for the balance to appear on screen
-    time.sleep(2) 
-    
-    # 4. Find the balance text using XPath and save it
-    try:
-        balance_element = context.driver.find_element(By.XPATH, "//*[contains(text(), 'Leave Balance')]/parent::div/following-sibling::div//p")
-        # Extract just the number (e.g., from "10.00 Day(s)" -> 10.0)
-        context.initial_balance = float(balance_element.text.split(' ')[0])
-    except:
-        context.initial_balance = 0.0 # Fallback if no balance is available
+DevTools listening on ws://127.0.0.1:52291/devtools/browser/ee85e1df-dbb2-464d-a8f6-8cc1e6057e0e
 
-@then('I capture the success toast message')
-def step_impl(context):
-    # Note: We aren't actually clicking 'Apply' in this simple script, 
-    # so we will just pass this step to prevent a timeout error for now.
-    pass 
+  Scenario: User Authentication                                # features/orangehrm.feature:9
+    Given I navigate to the OrangeHRM login page               # features/steps/login_steps.py:6
+    Then I should be logged in successfully                    # features/steps/login_steps.py:18 0.007svery renderer should have at least one task provided by a primary task provi
+    Then I should be logged in successfully                    # features/steps/login_steps.py:18new bug and tag it as a dependency of crbug.com/40528867.
+DevTools listening on ws://127.0.0.1:52034/devtools/browser/e1174334-3d48-44ed-916f-471b5f8ab108
 
-@then('exactly one day of leave should be deducted')
-def step_impl(context):
-    # Pass for now since we skipped the actual application button click
-    pass
+  Scenario Outline: Employee Creation -- @1.1                  # features/orangehrm.feature:21
+    Given I navigate to the OrangeHRM login page               # features/steps/login_steps.py:6
+    And I enter "Alice" and "Smith"                            # features/steps/pim_steps.py:7 0.365s5 1.555senderer should have at least one task provided by a primary task provid
+    And I enter "Alice" and "Smith"                            # features/steps/pim_steps.py:7ps.py:15g and tag it as a dependency of crbug.com/40528867.
+DevTools listening on ws://127.0.0.1:57329/devtools/browser/22d26b8a-2fdd-4b79-adc4-66776b93870f
 
+  Scenario Outline: Employee Creation -- @1.2                  # features/orangehrm.feature:22
+    Given I navigate to the OrangeHRM login page               # features/steps/login_steps.py:6
+    And I enter "John" and "Doe"                               # features/steps/pim_steps.py:7 0.311s5 1.516srenderer should have at least one task provided by a primary task provi
+    And I enter "John" and "Doe"                               # features/steps/pim_steps.py:7ps.py:15ug and tag it as a dependency of crbug.com/40528867.
+DevTools listening on ws://127.0.0.1:60747/devtools/browser/4577aec8-b451-44ba-9cbb-2ea8c8908af0
 
-profile_steps.py
+  Scenario: Admin Search using Data Tables                     # features/orangehrm.feature:25
+    Given I navigate to the OrangeHRM login page               # features/steps/login_steps.py:6
+    And I enter the following search criteria:                 # features/steps/admin_steps.py:5 0.210s.179srenderer should have at least one task provided by a primary task provid
+      | Username | User Role | Status  |teria:                 # features/steps/admin_steps.py:5.py:7ug and tag it as a dependency of crbug.com/40528867.
+      | Admin    | Admin     | Enabled |
+      | EssUser  | ESS       | Enabled |
+      | EssUser  | ESS       | Enabled |
+DevTools listening on ws://127.0.0.1:54396/devtools/browser/64a00299-e111-4eb9-a978-4918f4b818bc
 
-from behave import when
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import os
-import time
+    And I apply for exactly one day of leave                   # features/steps/leave_steps.py:9.py:15 1.483s
+      Traceback (most recent call last):eave                   # features/steps/leave_steps.py:9.py:15
+        File "C:\Program Files\Python314\Lib\site-packages\behave\model.py", line 1991, in run
+          match.run(runner.context)
+          ~~~~~~~~~^^^^^^^^^^^^^^^^
+        File "C:\Program Files\Python314\Lib\site-packages\behave\matchers.py", line 105, in run
+          self.func(context, *args, **kwargs)
+          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "features\steps\leave_steps.py", line 14, in step_impl
+          dropdown = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "oxd-select-text")))
+        File "C:\Program Files\Python314\Lib\site-packages\selenium\webdriver\support\wait.py", line 121, in until
+          raise TimeoutException(message, screen, stacktrace)
+      selenium.common.exceptions.TimeoutException: Message: 
+      Stacktrace:
+        msedgedriver!GetHandleVerifier [0x7ff6eb420f15+e235]
+        msedgedriver!GetHandleVerifier [0x7ff6eb420f74+e294]
+        msedgedriver!GetHandleVerifier [0x7ff6eb79a65a+38797a]
+        msedgedriver!(No symbol) [0x7ff6eb193e49]
+        msedgedriver!(No symbol) [0x7ff6eb1940c5]
+        msedgedriver!(No symbol) [0x7ff6eb1d13b7]
+        msedgedriver!(No symbol) [0x7ff6eb18aac7]
+        msedgedriver!(No symbol) [0x7ff6eb1cf112]
+        msedgedriver!(No symbol) [0x7ff6eb18a30c]
+        msedgedriver!(No symbol) [0x7ff6eb189566]
+        msedgedriver!(No symbol) [0x7ff6eb18a133]
+        msedgedriver!(No symbol) [0x7ff6eb253e49]
+        msedgedriver!(No symbol) [0x7ff6eb250413]
+        msedgedriver!(No symbol) [0x7ff6eb260672]
+        msedgedriver!GetHandleVerifier [0x7ff6eb43d498+2a7b8]
+        msedgedriver!GetHandleVerifier [0x7ff6eb445e86+331a6]
+        msedgedriver!GetHandleVerifier [0x7ff6eb428274+15594]
+        msedgedriver!GetHandleVerifier [0x7ff6eb428395+156b5]
+        msedgedriver!GetHandleVerifier [0x7ff6eb4156a3+29c3]
+        KERNEL32!BaseThreadInitThunk [0x7fff10f3e8d7+17]
+        ntdll!RtlUserThreadStart [0x7fff130ac48c+2c]
 
-@when('I upload my new profile picture')
-def step_impl(context):
-    wait = WebDriverWait(context.driver, 10)
-    
-    # 1. Click the actual profile picture image to open the upload screen
-    profile_pic = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "employee-image")))
-    profile_pic.click()
-    time.sleep(1) # Wait for page to transition
-    
-    # 2. Now find the hidden file upload element
-    upload_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='file']")))
-    
-    # 3. Send the file path
-    absolute_file_path = os.path.abspath("test_data/profile_image.png")
-    upload_element.send_keys(absolute_file_path)
-    
-    # 4. Click Save
-    save_button = context.driver.find_element(By.CSS_SELECTOR, "button[type='submit']")
-    save_button.click()
+    Then I capture the success toast message                   # None
+    And exactly one day of leave should be deducted            # None
+
+DevTools listening on ws://127.0.0.1:59917/devtools/browser/baa87f5f-98ac-4985-b7cd-6116d0b159d5
+
+  Scenario: Profile Update File Upload                         # features/orangehrm.feature:43
+    Given I navigate to the OrangeHRM login page               # features/steps/login_steps.py:6
+    And I upload my new profile picture                        # features/steps/profile_steps.py:9 1.654s59srenderer should have at least one task provided by a primary task provid
+    And I upload my new profile picture                        # features/steps/profile_steps.py:9y:7ug and tag it as a dependency of crbug.com/40528867.
+
+Errored scenarios:
+  features/orangehrm.feature:34  Leave Workflow State Verification
+
+0 features passed, 0 failed, 1 error, 0 skipped
+5 scenarios passed, 0 failed, 1 error, 0 skipped
+25 steps passed, 0 failed, 1 error, 2 skipped
+Took 0min 56.513s
