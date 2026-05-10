@@ -1,0 +1,359 @@
+base_page.py
+
+  
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
+class BasePage:
+
+    def __init__(self, driver):
+        self.driver = driver
+        self.wait = WebDriverWait(driver, 10)
+
+    def click(self, by_locator):
+        self.wait.until(
+            EC.element_to_be_clickable(by_locator)
+        ).click()
+
+    def find(self, by_locator):
+        return self.wait.until(
+            EC.presence_of_element_located(by_locator)
+        )
+
+    def find_elements(self, by_locator):
+        return self.wait.until(
+            EC.presence_of_all_elements_located(by_locator)
+        )
+
+pages/home_page.py
+
+   from selenium.webdriver.common.by import By
+from pages.base_page import BasePage
+from pages.category_page import CategoryPage
+from pages.login_page import LoginPage
+
+
+class HomePage(BasePage):
+
+    LAPTOPS = (By.LINK_TEXT, "Laptops")
+    PHONES = (By.LINK_TEXT, "Phones")
+    CART = (By.ID, "cartur")
+    LOGIN = (By.ID, "login2")
+
+    def click_laptops(self):
+        self.click(self.LAPTOPS)
+        return CategoryPage(self.driver)
+
+    def click_phones(self):
+        self.click(self.PHONES)
+        return CategoryPage(self.driver)
+
+    def click_cart(self):
+        self.click(self.CART)
+
+    def click_login(self):
+        self.click(self.LOGIN)
+        return LoginPage(self.driver)
+
+  pages/category_page.py
+
+ from selenium.webdriver.common.by import By
+from pages.base_page import BasePage
+from pages.product_details_page import ProductDetailsPage
+
+
+class CategoryPage(BasePage):
+
+    PRODUCTS = (By.CSS_SELECTOR, ".card-title")
+
+    def verify_laptop_list_presence(self):
+        products = self.find_elements(self.PRODUCTS)
+        assert len(products) > 0
+
+    def get_all_product_names(self):
+        products = self.find_elements(self.PRODUCTS)
+        return [product.text for product in products]
+
+    def click_product(self, product_name):
+        product = (By.LINK_TEXT, product_name)
+        self.click(product)
+        return ProductDetailsPage(self.driver)
+
+   pages/product_details_page.py
+
+      import logging
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+from pages.base_page import BasePage
+
+logging.basicConfig(level=logging.INFO)
+
+
+class ProductDetailsPage(BasePage):
+
+    ADD_TO_CART = (By.LINK_TEXT, "Add to cart")
+
+    def add_product_to_cart(self):
+        self.click(self.ADD_TO_CART)
+
+        wait = WebDriverWait(self.driver, 10)
+
+        alert = wait.until(EC.alert_is_present())
+
+        logging.info("Product added to cart alert appeared")
+
+        alert.accept()
+
+        logging.info("Alert accepted")
+
+   pages/cart_page.py
+
+     from selenium.webdriver.common.by import By
+from pages.base_page import BasePage
+from pages.purchase_modal import PurchaseModal
+
+
+class CartPage(BasePage):
+
+    PLACE_ORDER = (By.XPATH, "//button[text()='Place Order']")
+    SUCCESS_MESSAGE = (By.CSS_SELECTOR, ".sweet-alert h2")
+
+    def click_place_order(self):
+        self.click(self.PLACE_ORDER)
+        return PurchaseModal(self.driver)
+
+    def get_success_message(self):
+        return self.get_text(self.SUCCESS_MESSAGE)
+
+ pages/purchase_modal.py
+
+
+          from selenium.webdriver.common.by import By
+from pages.base_page import BasePage
+import allure
+
+
+class PurchaseModal(BasePage):
+
+    NAME = (By.ID, "name")
+    COUNTRY = (By.ID, "country")
+    CITY = (By.ID, "city")
+    CARD = (By.ID, "card")
+    MONTH = (By.ID, "month")
+    YEAR = (By.ID, "year")
+
+    PURCHASE = (By.XPATH, "//button[text()='Purchase']")
+
+    @allure.step("Filling purchase form")
+    def fill_purchase_form(self, data):
+
+        with allure.step(f"Enter Name: {data['name']}"):
+            self.find(self.NAME).send_keys(data["name"])
+
+        with allure.step(f"Enter Country: {data['country']}"):
+            self.find(self.COUNTRY).send_keys(data["country"])
+
+        with allure.step(f"Enter City: {data['city']}"):
+            self.find(self.CITY).send_keys(data["city"])
+
+        with allure.step(f"Enter Card: {data['card']}"):
+            self.find(self.CARD).send_keys(data["card"])
+
+        with allure.step(f"Enter Month: {data['month']}"):
+            self.find(self.MONTH).send_keys(data["month"])
+
+        with allure.step(f"Enter Year: {data['year']}"):
+            self.find(self.YEAR).send_keys(data["year"])
+
+    def click_purchase(self):
+        self.click(self.PURCHASE)
+
+          
+   pages/login_page.py
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+from pages.base_page import BasePage
+
+
+class LoginPage(BasePage):
+
+    USERNAME = (By.ID, "loginusername")
+    PASSWORD = (By.ID, "loginpassword")
+
+    LOGIN_BUTTON = (By.XPATH, "//button[text()='Log in']")
+
+    def login(self, username, password):
+
+        self.find(self.USERNAME).send_keys(username)
+        self.find(self.PASSWORD).send_keys(password)
+
+        self.click(self.LOGIN_BUTTON)
+
+    def get_alert_text(self):
+
+        wait = WebDriverWait(self.driver, 10)
+
+        alert = wait.until(EC.alert_is_present())
+
+        text = alert.text
+
+        alert.accept()
+
+        return text
+
+conftest.py
+
+          import os
+import pytest
+import allure
+
+from selenium import webdriver
+
+
+@pytest.fixture
+def driver():
+
+    driver = webdriver.Chrome()
+
+    driver.maximize_window()
+
+    driver.get("https://www.demoblaze.com/index.html")
+
+    yield driver
+
+    driver.quit()
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+
+    outcome = yield
+
+    report = outcome.get_result()
+
+    if report.when == "call" and report.failed:
+
+        driver = item.funcargs["driver"]
+
+        os.makedirs("screenshots", exist_ok=True)
+
+        screenshot_path = f"screenshots/{item.name}.png"
+
+        driver.save_screenshot(screenshot_path)
+
+        with open(screenshot_path, "rb") as file:
+            allure.attach(
+                file.read(),
+                name="Failure Screenshot",
+                attachment_type=allure.attachment_type.PNG
+            )
+
+      tests/test_navigation.py
+
+      from pages.home_page import HomePage
+
+
+def test_navigation_to_laptops(driver):
+
+    home = HomePage(driver)
+
+    home.click_laptops().verify_laptop_list_presence()
+
+      tests/test_product_search.py
+
+      from pages.home_page import HomePage
+
+
+def test_phone_products(driver):
+
+    home = HomePage(driver)
+
+    category = home.click_phones()
+
+    product_names = category.get_all_product_names()
+
+    assert "Samsung galaxy s6" in product_names
+
+
+
+      tests/test_add_to_cart.py
+from pages.home_page import HomePage
+
+
+def test_add_product_to_cart(driver):
+
+    home = HomePage(driver)
+
+    category = home.click_laptops()
+
+    product_page = category.click_product("Sony vaio i5")
+
+    product_page.add_product_to_cart()
+
+    tests/test_checkout.py
+
+   from pages.home_page import HomePage
+from pages.category_page import CategoryPage
+from pages.cart_page import CartPage
+
+
+def test_checkout(driver):
+
+    home = HomePage(driver)
+
+    category = home.click_laptops()
+
+    product_page = category.click_product("Sony vaio i5")
+
+    product_page.add_product_to_cart()
+
+    home.click_cart()
+
+    cart = CartPage(driver)
+
+    modal = cart.click_place_order()
+
+    data = {
+        "name": "Amman",
+        "country": "India",
+        "city": "Delhi",
+        "card": "123456789",
+        "month": "May",
+        "year": "2026"
+    }
+
+    modal.fill_purchase_form(data)
+
+    modal.click_purchase()
+
+    assert "Thank you for your purchase!" in cart.get_success_message()   
+      
+
+      tests/test_login_negative.py
+
+      from pages.home_page import HomePage
+
+
+def test_invalid_login(driver):
+
+    home = HomePage(driver)
+
+    login_page = home.click_login()
+
+    login_page.login("pavanol", "wrongpassword")
+
+    alert_text = login_page.get_alert_text()
+
+    # Intentional failure
+    assert alert_text == "Success"
+      
+        return self.find(by_locator).text  
+
+          
