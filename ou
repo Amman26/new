@@ -1,257 +1,72 @@
-behave
-USING RUNNER: behave.runner:Runner
-Feature: OrangeHRM Automation Testing # features/orangehrm.feature:1
+navigation_steps.py
 
-  Feature: OrangeHRM Automation Testing  # features/orangehrm.feature:1
+from behave import when
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
 
-DevTools listening on ws://127.0.0.1:62341/devtools/browser/30e68617-f5d4-48a7-a9cc-0346a8badab3
+@when('I navigate to the "{menu_name}" menu')
+def step_impl(context, menu_name):
+    wait = WebDriverWait(context.driver, 10)
+    # This clicks the items on the left side panel (Admin, PIM, Leave, My Info)
+    menu = wait.until(EC.element_to_be_clickable((By.XPATH, f"//span[text()='{menu_name}']")))
+    menu.click()
+    time.sleep(1) # Brief pause to allow the new page to load
 
-  Scenario: User Authentication                                # features/orangehrm.feature:8
-    Given I navigate to the OrangeHRM login page               # features/steps/login_steps.py:6
-    Then I should be logged in successfully                    # features/steps/login_steps.py:18 1.707sery renderer should have at least one task provided by a primary task provid
-    Then I should be logged in successfully                    # features/steps/login_steps.py:18ew bug and tag it as a dependency of crbug.com/40528867.
-DevTools listening on ws://127.0.0.1:60055/devtools/browser/cbd70df5-cee8-47bc-9a98-feaa2175959d
-
-  Scenario Outline: Employee Creation -- @1.1                  # features/orangehrm.feature:20
-    Given I navigate to the OrangeHRM login page               # features/steps/login_steps.py:6
-    And I enter "Alice" and "Smith"                            # features/steps/pim_steps.py:7:11 1.854svery renderer should have at least one task provided by a primary task provi
-      Traceback (most recent call last):                       # features/steps/pim_steps.py:7:11new bug and tag it as a dependency of crbug.com/40528867.
-        File "C:\Program Files\Python314\Lib\site-packages\behave\model.py", line 1991, in run
-          match.run(runner.context)
-          ~~~~~~~~~^^^^^^^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\behave\matchers.py", line 105, in run
-          self.func(context, *args, **kwargs)
-          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "features\steps\pim_steps.py", line 10, in step_impl
-          wait.until(EC.visibility_of_element_located((By.NAME, "firstName"))).send_keys(first_name)
-          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\selenium\webdriver\support\wait.py", line 121, in until
-          raise TimeoutException(message, screen, stacktrace)
-      selenium.common.exceptions.TimeoutException: Message: 
-      Stacktrace:
-        msedgedriver!GetHandleVerifier [0x7ff6eb420f15+e235]
-        msedgedriver!GetHandleVerifier [0x7ff6eb420f74+e294]
-        msedgedriver!GetHandleVerifier [0x7ff6eb79a65a+38797a]
-        msedgedriver!(No symbol) [0x7ff6eb193e49]
-        msedgedriver!(No symbol) [0x7ff6eb1940c5]
-        msedgedriver!(No symbol) [0x7ff6eb1d13b7]
-        msedgedriver!(No symbol) [0x7ff6eb18aac7]
-        msedgedriver!(No symbol) [0x7ff6eb1cf112]
-        msedgedriver!(No symbol) [0x7ff6eb18a30c]
-        msedgedriver!(No symbol) [0x7ff6eb189566]
-        msedgedriver!(No symbol) [0x7ff6eb18a133]
-        msedgedriver!(No symbol) [0x7ff6eb253e49]
-        msedgedriver!(No symbol) [0x7ff6eb250413]
-        msedgedriver!(No symbol) [0x7ff6eb260672]
-        msedgedriver!GetHandleVerifier [0x7ff6eb43d498+2a7b8]
-        msedgedriver!GetHandleVerifier [0x7ff6eb445e86+331a6]
-        msedgedriver!GetHandleVerifier [0x7ff6eb428274+15594]
-        msedgedriver!GetHandleVerifier [0x7ff6eb428395+156b5]
-        msedgedriver!GetHandleVerifier [0x7ff6eb4156a3+29c3]
-        KERNEL32!BaseThreadInitThunk [0x7fff10f3e8d7+17]
-        ntdll!RtlUserThreadStart [0x7fff130ac48c+2c]
+@when('I click on the "{tab_name}" tab')
+def step_impl(context, tab_name):
+    wait = WebDriverWait(context.driver, 10)
+    # This clicks the top navigation tabs (like 'Add Employee' or 'Apply')
+    tab = wait.until(EC.element_to_be_clickable((By.XPATH, f"//a[text()='{tab_name}']")))
+    tab.click()
+    time.sleep(1)
 
 
-DevTools listening on ws://127.0.0.1:65126/devtools/browser/0fcca313-10c8-4ae9-84ca-20a8b5d2b20c
 
-    And I enter "aniketAshok" and "Patil"                      # features/steps/pim_steps.py:7:11 1.927s
-      Traceback (most recent call last):"                      # features/steps/pim_steps.py:7:11
-        File "C:\Program Files\Python314\Lib\site-packages\behave\model.py", line 1991, in run
-          match.run(runner.context)
-          ~~~~~~~~~^^^^^^^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\behave\matchers.py", line 105, in run
-          self.func(context, *args, **kwargs)
-          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "features\steps\pim_steps.py", line 10, in step_impl
-          wait.until(EC.visibility_of_element_located((By.NAME, "firstName"))).send_keys(first_name)
-          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\selenium\webdriver\support\wait.py", line 121, in until
-          raise TimeoutException(message, screen, stacktrace)
-      selenium.common.exceptions.TimeoutException: Message: 
-      Stacktrace:
-        msedgedriver!GetHandleVerifier [0x7ff6eb420f15+e235]
-        msedgedriver!GetHandleVerifier [0x7ff6eb420f74+e294]
-        msedgedriver!GetHandleVerifier [0x7ff6eb79a65a+38797a]
-        msedgedriver!(No symbol) [0x7ff6eb193e49]
-        msedgedriver!(No symbol) [0x7ff6eb1940c5]
-        msedgedriver!(No symbol) [0x7ff6eb1d13b7]
-        msedgedriver!(No symbol) [0x7ff6eb18aac7]
-        msedgedriver!(No symbol) [0x7ff6eb1cf112]
-        msedgedriver!(No symbol) [0x7ff6eb18a30c]
-        msedgedriver!(No symbol) [0x7ff6eb189566]
-        msedgedriver!(No symbol) [0x7ff6eb18a133]
-        msedgedriver!(No symbol) [0x7ff6eb253e49]
-        msedgedriver!(No symbol) [0x7ff6eb250413]
-        msedgedriver!(No symbol) [0x7ff6eb260672]
-        msedgedriver!GetHandleVerifier [0x7ff6eb43d498+2a7b8]
-        msedgedriver!GetHandleVerifier [0x7ff6eb445e86+331a6]
-        msedgedriver!GetHandleVerifier [0x7ff6eb428274+15594]
-        msedgedriver!GetHandleVerifier [0x7ff6eb428395+156b5]
-        msedgedriver!GetHandleVerifier [0x7ff6eb4156a3+29c3]
-        KERNEL32!BaseThreadInitThunk [0x7fff10f3e8d7+17]
-        ntdll!RtlUserThreadStart [0x7fff130ac48c+2c]
+Feature: OrangeHRM Automation Testing
 
+  Background: 
+    # Moving the login here means it will automatically run before EVERY scenario below
+    Given I navigate to the OrangeHRM login page
+    When I login with username "Admin" and password "admin123"
 
-DevTools listening on ws://127.0.0.1:62691/devtools/browser/48b544e5-41d3-4b5b-9e54-b0782e2e6331
+  # --- Assignment 1 ---
+  Scenario: User Authentication
+    Then I should be logged in successfully
 
-  Scenario: Admin Search using Data Tables                     # features/orangehrm.feature:24
-    Given I navigate to the OrangeHRM login page               # features/steps/login_steps.py:6
-    And I enter the following search criteria:                 # features/steps/admin_steps.py:51 1.854svery renderer should have at least one task provided by a primary task provi
-      | Username | User Role | Status  |teria:                 # features/steps/admin_steps.py:51new bug and tag it as a dependency of crbug.com/40528867.
+  # --- Assignment 2 ---
+  Scenario Outline: Employee Creation
+    # Navigate to the correct page first!
+    When I navigate to the "PIM" menu
+    And I click on the "Add Employee" tab
+    And I enter "<FirstName>" and "<LastName>"
+    
+    Examples:
+      | FirstName | LastName |
+      | Alice     | Smith    |
+      | John      | Doe      |
+
+  # --- Assignment 3 ---
+  Scenario: Admin Search using Data Tables
+    # Navigate to the Admin page first!
+    When I navigate to the "Admin" menu
+    And I enter the following search criteria:
+      | Username | User Role | Status  |
       | Admin    | Admin     | Enabled |
       | EssUser  | ESS       | Enabled |
-      Traceback (most recent call last):
-        File "C:\Program Files\Python314\Lib\site-packages\behave\model.py", line 1991, in run
-          match.run(runner.context)
-          ~~~~~~~~~^^^^^^^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\behave\matchers.py", line 105, in run
-          self.func(context, *args, **kwargs)
-          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "features\steps\admin_steps.py", line 14, in step_impl
-          context.driver.find_element(By.XPATH,
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-                                      "//label[text()='Username']/../following-sibling::div/input").send_keys(
-                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 823, in find_element
-          return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
-                 ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 450, in execute
-          self.error_handler.check_response(response)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
-          raise exception_class(message, screen, stacktrace)
-      selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//label[text()='Username']/../following-sibling::div/input"}
-        (Session info: MicrosoftEdge=148.0.3967.54); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
-      Stacktrace:
-        msedgedriver!GetHandleVerifier [0x7ff6eb420f15+e235]
-        msedgedriver!GetHandleVerifier [0x7ff6eb420f74+e294]
-        msedgedriver!GetHandleVerifier [0x7ff6eb79a65a+38797a]
-        msedgedriver!(No symbol) [0x7ff6eb193e49]
-        msedgedriver!(No symbol) [0x7ff6eb1940c5]
-        msedgedriver!(No symbol) [0x7ff6eb1d13b7]
-        msedgedriver!(No symbol) [0x7ff6eb18aac7]
-        msedgedriver!(No symbol) [0x7ff6eb1cf112]
-        msedgedriver!(No symbol) [0x7ff6eb18a30c]
-        msedgedriver!(No symbol) [0x7ff6eb189566]
-        msedgedriver!(No symbol) [0x7ff6eb18a133]
-        msedgedriver!(No symbol) [0x7ff6eb253e49]
-        msedgedriver!(No symbol) [0x7ff6eb250413]
-        msedgedriver!(No symbol) [0x7ff6eb260672]
-        msedgedriver!GetHandleVerifier [0x7ff6eb43d498+2a7b8]
-        msedgedriver!GetHandleVerifier [0x7ff6eb445e86+331a6]
-        msedgedriver!GetHandleVerifier [0x7ff6eb428274+15594]
-        msedgedriver!GetHandleVerifier [0x7ff6eb428395+156b5]
-        msedgedriver!GetHandleVerifier [0x7ff6eb4156a3+29c3]
-        KERNEL32!BaseThreadInitThunk [0x7fff10f3e8d7+17]
-        ntdll!RtlUserThreadStart [0x7fff130ac48c+2c]
 
+  # --- Assignment 4 ---
+  Scenario: Leave Workflow State Verification
+    # Navigate to the Leave Application page first!
+    When I navigate to the "Leave" menu
+    And I click on the "Apply" tab
+    And I apply for exactly one day of leave
+    Then I capture the success toast message
+    And exactly one day of leave should be deducted
 
-DevTools listening on ws://127.0.0.1:51054/devtools/browser/2a12ea4b-3e3f-4795-a957-5c424a2ae31e
-
-    And I apply for exactly one day of leave                   # features/steps/leave_steps.py:71 0.899s
-      Traceback (most recent call last):eave                   # features/steps/leave_steps.py:71
-        File "C:\Program Files\Python314\Lib\site-packages\behave\model.py", line 1991, in run
-          match.run(runner.context)
-          ~~~~~~~~~^^^^^^^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\behave\matchers.py", line 105, in run
-          self.func(context, *args, **kwargs)
-          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "features\steps\leave_steps.py", line 10, in step_impl
-          initial_balance_text = context.driver.find_element(By.ID, "leaveBalance").text
-                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 823, in find_element
-          return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
-                 ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 450, in execute
-          self.error_handler.check_response(response)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
-          raise exception_class(message, screen, stacktrace)
-      selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="leaveBalance"]"}
-        (Session info: MicrosoftEdge=148.0.3967.54); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
-      Stacktrace:
-        msedgedriver!GetHandleVerifier [0x7ff6eb420f15+e235]
-        msedgedriver!GetHandleVerifier [0x7ff6eb420f74+e294]
-        msedgedriver!GetHandleVerifier [0x7ff6eb79a65a+38797a]
-        msedgedriver!(No symbol) [0x7ff6eb193e49]
-        msedgedriver!(No symbol) [0x7ff6eb1940c5]
-        msedgedriver!(No symbol) [0x7ff6eb1d13b7]
-        msedgedriver!(No symbol) [0x7ff6eb18aac7]
-        msedgedriver!(No symbol) [0x7ff6eb1cf112]
-        msedgedriver!(No symbol) [0x7ff6eb18a30c]
-        msedgedriver!(No symbol) [0x7ff6eb189566]
-        msedgedriver!(No symbol) [0x7ff6eb18a133]
-        msedgedriver!(No symbol) [0x7ff6eb253e49]
-        msedgedriver!(No symbol) [0x7ff6eb250413]
-        msedgedriver!(No symbol) [0x7ff6eb260672]
-        msedgedriver!GetHandleVerifier [0x7ff6eb43d498+2a7b8]
-        msedgedriver!GetHandleVerifier [0x7ff6eb445e86+331a6]
-        msedgedriver!GetHandleVerifier [0x7ff6eb428274+15594]
-        msedgedriver!GetHandleVerifier [0x7ff6eb428395+156b5]
-        msedgedriver!GetHandleVerifier [0x7ff6eb4156a3+29c3]
-        KERNEL32!BaseThreadInitThunk [0x7fff10f3e8d7+17]
-        ntdll!RtlUserThreadStart [0x7fff130ac48c+2c]
-
-    Then I capture the success toast message                   # None
-    And exactly one day of leave should be deducted            # None
-
-DevTools listening on ws://127.0.0.1:61391/devtools/browser/105dde9b-449f-4688-b134-33eba29b570b
-
-  Scenario: Profile Update File Upload                         # features/orangehrm.feature:41
-    Given I navigate to the OrangeHRM login page               # features/steps/login_steps.py:6
-    And I upload my new profile picture                        # features/steps/profile_steps.py:60.847sery renderer should have at least one task provided by a primary task provid
-      Traceback (most recent call last):                       # features/steps/profile_steps.py:6w bug and tag it as a dependency of crbug.com/40528867.
-        File "C:\Program Files\Python314\Lib\site-packages\behave\model.py", line 1991, in run
-          match.run(runner.context)
-          ~~~~~~~~~^^^^^^^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\behave\matchers.py", line 105, in run
-          self.func(context, *args, **kwargs)
-          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "features\steps\profile_steps.py", line 8, in step_impl
-          upload_element = context.driver.find_element(By.CSS_SELECTOR, "input[type='file']")
-        File "C:\Program Files\Python314\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 823, in find_element
-          return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
-                 ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 450, in execute
-          self.error_handler.check_response(response)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-        File "C:\Program Files\Python314\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
-          raise exception_class(message, screen, stacktrace)
-      selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"input[type='file']"}
-        (Session info: MicrosoftEdge=148.0.3967.54); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
-      Stacktrace:
-        msedgedriver!GetHandleVerifier [0x7ff6eb420f15+e235]
-        msedgedriver!GetHandleVerifier [0x7ff6eb420f74+e294]
-        msedgedriver!GetHandleVerifier [0x7ff6eb79a65a+38797a]
-        msedgedriver!(No symbol) [0x7ff6eb193e49]
-        msedgedriver!(No symbol) [0x7ff6eb1940c5]
-        msedgedriver!(No symbol) [0x7ff6eb1d13b7]
-        msedgedriver!(No symbol) [0x7ff6eb18aac7]
-        msedgedriver!(No symbol) [0x7ff6eb1cf112]
-        msedgedriver!(No symbol) [0x7ff6eb18a30c]
-        msedgedriver!(No symbol) [0x7ff6eb189566]
-        msedgedriver!(No symbol) [0x7ff6eb18a133]
-        msedgedriver!(No symbol) [0x7ff6eb253e49]
-        msedgedriver!(No symbol) [0x7ff6eb250413]
-        msedgedriver!(No symbol) [0x7ff6eb260672]
-        msedgedriver!GetHandleVerifier [0x7ff6eb43d498+2a7b8]
-        msedgedriver!GetHandleVerifier [0x7ff6eb445e86+331a6]
-        msedgedriver!GetHandleVerifier [0x7ff6eb428274+15594]
-        msedgedriver!GetHandleVerifier [0x7ff6eb428395+156b5]
-        msedgedriver!GetHandleVerifier [0x7ff6eb4156a3+29c3]
-        KERNEL32!BaseThreadInitThunk [0x7fff10f3e8d7+17]
-        ntdll!RtlUserThreadStart [0x7fff130ac48c+2c]
-
-
-
-Errored scenarios:
-  features/orangehrm.feature:20  Employee Creation -- @1.1 
-  features/orangehrm.feature:21  Employee Creation -- @1.2 
-  features/orangehrm.feature:24  Admin Search using Data Tables
-  features/orangehrm.feature:33  Leave Workflow State Verification
-  features/orangehrm.feature:41  Profile Update File Upload
-
-0 features passed, 0 failed, 1 error, 0 skipped
-1 scenario passed, 0 failed, 5 error, 0 skipped
-13 steps passed, 0 failed, 5 error, 2 skipped
-Took 0min 46.095s
+  # --- Assignment 5 ---
+  Scenario: Profile Update File Upload
+    # Navigate to the My Info page first!
+    When I navigate to the "My Info" menu
+    And I upload my new profile picture
