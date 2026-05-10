@@ -1,8 +1,36 @@
-PS C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 14> allure serve allure-results
-allure : The term 'allure' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, 
-verify that the path is correct and try again.
-At line:1 char:1
-+ allure serve allure-results
-+ ~~~~~~
-    + CategoryInfo          : ObjectNotFound: (allure:String) [], CommandNotFoundException
-    + FullyQualifiedErrorId : CommandNotFoundException
+Step-by-Step Fix for Windows
+Step 1: Install Scoop
+
+Open PowerShell as Administrator and run:
+
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+Press:
+
+Y
+
+Then run:
+
+irm get.scoop.sh | iex
+Step 2: Install Allure
+
+Run:
+
+scoop install allure
+
+Wait for installation to complete.
+
+Step 3: Verify Installation
+
+Run:
+
+allure --version
+
+You should get something like:
+
+2.xx.x
+Step 4: Generate Report
+
+Now run:
+
+allure serve allure-results
