@@ -1,58 +1,8 @@
-PS C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 14> pytest -v -s
-=============================================================================== test session starts ===============================================================================
-platform win32 -- Python 3.14.4, pytest-9.0.3, pluggy-1.6.0 -- C:\Program Files\Python314\python.exe
-cachedir: .pytest_cache
-rootdir: C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 14
-configfile: pytest.ini
-plugins: allure-pytest-2.16.0
-collected 5 items                                                                                                                                                                  
-
-tests/test_add_to_cart.py::test_add_product_to_cart 
-DevTools listening on ws://127.0.0.1:62647/devtools/browser/29f63b8e-af95-4985-8e2f-c50f128b9d5b
-PASSED
-tests/test_checkout.py::test_checkout 
-DevTools listening on ws://127.0.0.1:53753/devtools/browser/96eb812e-9621-4df1-88c0-275ca62a897e
-[4020:11976:0510/213912.893:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
-[4020:11976:0510/213913.564:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
-PASSED
-tests/test_login_negative.py::test_invalid_login 
-DevTools listening on ws://127.0.0.1:60250/devtools/browser/f24855dc-a3d8-42b2-8730-899f67afc17c
-[4908:3756:0510/213927.127:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
-[4908:3756:0510/213927.750:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
-FAILED
-tests/test_navigation.py::test_navigation_to_laptops 
-DevTools listening on ws://127.0.0.1:54903/devtools/browser/1631b7f6-96ba-4b7c-8f5d-5a6267108be7
-[1808:8584:0510/213936.939:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
-PASSED
-tests/test_product_search.py::test_phone_products 
-DevTools listening on ws://127.0.0.1:61965/devtools/browser/aa3a670b-defc-4bed-b05f-e57070596277
-[5980:11816:0510/213945.250:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
-[5980:11816:0510/213946.185:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
-PASSED
-
-==================================================================================== FAILURES =====================================================================================
-_______________________________________________________________________________ test_invalid_login ________________________________________________________________________________
-
-driver = <selenium.webdriver.edge.webdriver.WebDriver (session="435afc4f97bd5f9126e9dcbaa1ba224f")>
-
-    def test_invalid_login(driver):
-        home = HomePage(driver)
-    
-        login_page = home.click_login()
-    
-        login_page.login("pavanol", "wrongpassword")
-    
-        alert_text = login_page.get_alert_text()
-    
-        # Intentional failure
->       assert alert_text == "Success"
-E       AssertionError: assert 'Wrong password.' == 'Success'
-E         
-E         - Success
-E         + Wrong password.
-
-tests\test_login_negative.py:14: AssertionError
-============================================================================= short test summary info =============================================================================
-FAILED tests/test_login_negative.py::test_invalid_login - AssertionError: assert 'Wrong password.' == 'Success'
-========================================================================== 1 failed, 4 passed in 51.73s ===========================================================================
-PS C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 14> 
+PS C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 14> allure serve allure-results
+allure : The term 'allure' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, 
+verify that the path is correct and try again.
+At line:1 char:1
++ allure serve allure-results
++ ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (allure:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
