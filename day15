@@ -1,0 +1,176 @@
+Step 1: Install Required Packages
+
+Run these commands in terminal:
+
+pip install robotframework
+pip install robotframework-seleniumlibrary
+pip install selenium
+pip install robotframework-allure
+
+For Allure:
+
+pip install allure-python-commons
+
+
+  Resources/login_resources.resource
+  *** Settings ***
+Library    SeleniumLibrary
+
+*** Variables ***
+${URL}                 https://www.saucedemo.com
+${BROWSER}             Chrome
+
+${USERNAME_FIELD}      id:user-name
+${PASSWORD_FIELD}      id:password
+${LOGIN_BUTTON}        id:login-button
+
+${PRODUCT_TITLE}       xpath://span[text()='Products']
+
+*** Keywords ***
+Login To Application
+    [Arguments]    ${username}    ${password}
+
+    Input Text      ${USERNAME_FIELD}    ${username}
+    Input Password  ${PASSWORD_FIELD}    ${password}
+    Click Button    ${LOGIN_BUTTON}
+
+Resources/common.resource
+  *** Settings ***
+Library    SeleniumLibrary
+
+*** Keywords ***
+Open Browser To SauceDemo
+    Open Browser    https://www.saucedemo.com    Chrome
+    Maximize Browser Window
+    Set Selenium Implicit Wait    5s
+
+Close Browser Session
+    Close Browser
+
+Capture Failure Screenshot
+    ${timestamp}=    Get Time    epoch
+    Run Keyword If Test Failed
+    ...    Capture Page Screenshot
+    ...    failure_${TEST_NAME}_${timestamp}.png
+
+
+      Tests/smoke_tests.robot
+
+      *** Settings ***
+Resource    ../Resources/common.resource
+Resource    ../Resources/login_resources.resource
+
+Suite Setup       Open Browser To SauceDemo
+Suite Teardown    Close Browser Session
+Test Teardown     Capture Failure Screenshot
+
+*** Test Cases ***
+Valid Login Test
+    [Tags]    Critical    Smoke    Regression
+
+    Set Test Documentation
+    ...    Verify successful login into SauceDemo application.
+
+    Login To Application    standard_user    secret_sauce
+
+    Wait Until Element Is Visible    ${PRODUCT_TITLE}
+
+    Element Should Be Visible    ${PRODUCT_TITLE}
+
+
+Libraries/ProductPage.py
+
+  from selenium.webdriver.common.by import By
+
+class ProductPage:
+
+    def __init__(self):
+        self.prices = {
+            "Sauce Labs Backpack": "29.99",
+            "Sauce Labs Bike Light": "9.99"
+        }
+
+    def get_product_price_by_name(self, product_name):
+        return self.prices[product_name]
+
+
+          Tests/regression_tests.robot
+
+*** Settings ***
+Library     SeleniumLibrary
+Library     ../Libraries/ProductPage.py
+
+Resource    ../Resources/common.resource
+Resource    ../Resources/login_resources.resource
+
+Suite Setup       Open Browser To SauceDemo
+Suite Teardown    Close Browser Session
+Test Teardown     Capture Failure Screenshot
+
+*** Variables ***
+${INVALID_ERROR}    Epic sadface: Username and password do not match any user in this service
+${LOCKED_ERROR}     Epic sadface: Sorry, this user has been locked out.
+
+*** Test Cases ***
+Verify Product Price Total
+    [Tags]    Regression    Critical
+
+    Set Test Documentation
+    ...    Verify total amount of two products.
+
+    Login To Application    standard_user    secret_sauce
+
+    ${price1}=    Get Product Price By Name    Sauce Labs Backpack
+    ${price2}=    Get Product Price By Name    Sauce Labs Bike Light
+
+    ${total}=    Evaluate    float(${price1}) + float(${price2})
+
+    Should Be Equal As Numbers    ${total}    39.98
+
+
+Invalid Login Scenarios
+    [Template]    Invalid Login Scenario
+
+    invalid_user      wrong_pass      ${INVALID_ERROR}
+    locked_out_user   secret_sauce    ${LOCKED_ERROR}
+    problem_user      wrong_pass      ${INVALID_ERROR}
+
+*** Keywords ***
+Invalid Login Scenario
+    [Arguments]    ${username}    ${password}    ${expected_error}
+
+    Go To    https://www.saucedemo.com
+
+    Input Text        ${USERNAME_FIELD}    ${username}
+    Input Password    ${PASSWORD_FIELD}    ${password}
+    Click Button      ${LOGIN_BUTTON}
+
+    Element Should Contain
+    ...    xpath://h3[@data-test='error']
+    ...    ${expected_error}
+
+
+Resources/cart_page.resource
+
+  *** Settings ***
+Library    SeleniumLibrary
+
+*** Variables ***
+${ADD_BACKPACK}      id:add-to-cart-sauce-labs-backpack
+${ADD_BIKELIGHT}     id:add-to-cart-sauce-labs-bike-light
+
+${CART_ICON}         class:shopping_cart_link
+${CART_BADGE}        class:shopping_cart_badge
+
+${CHECKOUT_BUTTON}   id:checkout
+
+*** Keywords ***
+Add Backpack To Cart
+    Click Button    ${ADD_BACKPACK}
+
+Add Bike Light To Cart
+    Click Button    ${ADD_BIKELIGHT}
+
+Open Cart
+    Click Element    ${CART_ICON}
+          
