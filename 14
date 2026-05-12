@@ -1,36 +1,106 @@
-Step-by-Step Fix for Windows
-Step 1: Install Scoop
+==============================================================================
+Smoke Tests                                                                   
+==============================================================================
 
-Open PowerShell as Administrator and run:
+DevTools listening on ws://127.0.0.1:52594/devtools/browser/455087c7-cad9-4fdb-83b5-55acc5f72c86
+[12140:3604:0512/223919.646:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
+Valid Login Test                                                      | PASS |
+------------------------------------------------------------------------------
+Smoke Tests                                                           | PASS |
+1 test, 1 passed, 0 failed
+==============================================================================
+Output:  C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project\output.xml
+Log:     C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project\log.html
+Report:  C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project\report.html
+(.venv) PS C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project> robot Tests/regression_tests.robot
+==============================================================================
+Regression Tests                                                              
+==============================================================================
 
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+DevTools listening on ws://127.0.0.1:54645/devtools/browser/9bb8be1a-9bff-4b2e-a40a-e9e5d3953462
+[11124:11560:0512/223952.946:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
+Verify Product Price Total                                            | PASS |
+------------------------------------------------------------------------------
+Invalid Login Scenarios                                               | PASS |
+------------------------------------------------------------------------------
+Regression Tests                                                      | PASS |
+2 tests, 2 passed, 0 failed
+==============================================================================
+Output:  C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project\output.xml
+Log:     C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project\log.html
+Report:  C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project\report.html
+(.venv) PS C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project> robot Tests/
+==============================================================================
+Tests                                                                         
+==============================================================================
+Tests.Regression Tests                                                        
+==============================================================================
 
-Press:
+DevTools listening on ws://127.0.0.1:60908/devtools/browser/3218ca9d-7cdb-423a-9ddd-60ddda6ac952
+[9704:7744:0512/224104.859:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
+Verify Product Price Total                                            | PASS |
+------------------------------------------------------------------------------
+Invalid Login Scenarios                                               | PASS |
+------------------------------------------------------------------------------
+Tests.Regression Tests                                                | PASS |
+2 tests, 2 passed, 0 failed
+==============================================================================
+Tests.Smoke Tests                                                             
+==============================================================================
 
-Y
+DevTools listening on ws://127.0.0.1:62752/devtools/browser/fe5b8d2b-8fb4-4eac-b05c-43a8f70f775d
+Valid Login Test                                                      | PASS |
+------------------------------------------------------------------------------
+Tests.Smoke Tests                                                     | PASS |
+1 test, 1 passed, 0 failed
+==============================================================================
+Tests                                                                 | PASS |
+3 tests, 3 passed, 0 failed
+==============================================================================
+Output:  C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project\output.xml
+Log:     C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project\log.html
+Report:  C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project\report.html
+(.venv) PS C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project> robot --listener allure_robotframework --outputdir Results Tests
+==============================================================================
+Tests                                                                         
+==============================================================================
+Tests.Regression Tests                                                        
+==============================================================================
 
-Then run:
+DevTools listening on ws://127.0.0.1:59339/devtools/browser/f9146b7d-c75d-4398-bd22-3c166fb79179
+[11884:4240:0512/224334.148:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
+[11884:4240:0512/224334.396:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
+Verify Product Price Total                                            | PASS |
+------------------------------------------------------------------------------
+Invalid Login Scenarios                                               | PASS |
+------------------------------------------------------------------------------
+Tests.Regression Tests                                                | PASS |
+2 tests, 2 passed, 0 failed
+==============================================================================
+Tests.Smoke Tests                                                             
+==============================================================================
 
-irm get.scoop.sh | iex
-Step 2: Install Allure
-
-Run:
-
-scoop install allure
-
-Wait for installation to complete.
-
-Step 3: Verify Installation
-
-Run:
-
-allure --version
-
-You should get something like:
-
-2.xx.x
-Step 4: Generate Report
-
-Now run:
-
-allure serve allure-results
+DevTools listening on ws://127.0.0.1:51358/devtools/browser/906f9580-7676-48ae-a59f-d678acdfe5ba
+[10168:12104:0512/224345.206:ERROR:chrome\browser\task_manager\providers\fallback_task_provider.cc:126] Every renderer should have at least one task provided by a primary task provider. If a "Renderer" fallback task is shown, it is a bug. If you have repro steps, please file a new bug and tag it as a dependency of crbug.com/40528867.
+Valid Login Test                                                      | PASS |
+------------------------------------------------------------------------------
+Tests.Smoke Tests                                                     | PASS |
+1 test, 1 passed, 0 failed
+==============================================================================
+Tests                                                                 | PASS |
+3 tests, 3 passed, 0 failed
+==============================================================================
+Output:  C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project\Results\output.xml
+Log:     C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project\Results\log.html
+Report:  C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project\Results\report.html
+(.venv) PS C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project> allure generate Results -o Allure-Results --clean               
+May 12, 2026 10:44:42 PM io.qameta.allure.CommandLine main
+INFO: APP_HOME is not set, using default configuration
+Report successfully generated to Allure-Results
+(.venv) PS C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project> allure open
+May 12, 2026 10:45:10 PM io.qameta.allure.CommandLine main
+INFO: APP_HOME is not set, using default configuration
+Starting web server...
+Server started at <http://127.0.0.1:53164>. Press <Ctrl+C> to exit
+^C^CTerminate batch job (Y/N)? y
+(.venv) PS C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 15\Robot_Project> 
