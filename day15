@@ -173,4 +173,16 @@ Add Bike Light To Cart
 
 Open Cart
     Click Element    ${CART_ICON}
-          
+
+
+
+Run Smoke Test
+robot Tests/smoke_tests.robot
+Run Regression Test
+robot Tests/regression_tests.robot
+Run With Allure
+robot --listener allure_robotframework --outputdir Results Tests/
+Generate Allure Report
+allure generate Results -o Allure-Results --clean
+Open Allure Report
+allure open Allure-Results
