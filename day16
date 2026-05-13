@@ -117,8 +117,8 @@ print(df)
 # 1. Handle Missing Values
 median_revenue = df['Revenue'].median()
 
-df['Revenue'].fillna(median_revenue, inplace=True)
-df['Product'].fillna("Unknown", inplace=True)
+df['Revenue'] = df['Revenue'].fillna(median_revenue)
+df['Product'] = df['Product'].fillna("Unknown")
 
 print("\nDataFrame After Handling Missing Values:\n")
 print(df)
