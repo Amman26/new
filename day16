@@ -1,0 +1,252 @@
+# =========================
+# Assignment 1: NumPy Array Surgery
+# =========================
+
+import numpy as np
+
+# Dataset
+np.random.seed(42)
+data_array = np.random.randint(1, 501, size=(10, 10))
+
+print("Original Array:\n")
+print(data_array)
+
+# 1. Find global mean and replace values greater than mean with 0
+global_mean = np.mean(data_array)
+
+modified_array = np.where(data_array > global_mean, 0, data_array)
+
+print("\nGlobal Mean:", global_mean)
+
+print("\nModified Array:\n")
+print(modified_array)
+
+# 2. Sum of each column and standard deviation of each row
+column_sum = np.sum(modified_array, axis=0)
+row_std = np.std(modified_array, axis=1)
+
+print("\nColumn Sum:\n", column_sum)
+
+print("\nRow Standard Deviation:\n", row_std)
+
+# 3. Extract center 4x4 sub-matrix and flatten to 1D
+sub_matrix = modified_array[3:7, 3:7]
+
+flat_array = sub_matrix.flatten()
+
+print("\nCenter 4x4 Sub-Matrix:\n")
+print(sub_matrix)
+
+print("\nFlattened 1D Array:\n")
+print(flat_array)
+
+
+
+# =========================
+# Assignment 2: Pandas Data Cleaning & Transformation
+# =========================
+
+import pandas as pd
+
+# Dataset
+raw_data = {
+    'Product': ['Laptop', 'Mouse', 'Monitor', 'Keyboard', 'Laptop', 'Mouse', None],
+    'Revenue': [1200, 25, 300, 75, 1150, None, 150],
+    'Cost': [800, 10, 200, 40, 850, 15, 100],
+    'Date': ['2025-01-10', '2025-02-15', '2025-03-20',
+             '2025-10-05', '2025-11-12', '2025-12-25', '2025-06-01']
+}
+
+df = pd.DataFrame(raw_data)
+
+print("Original DataFrame:\n")
+print(df)
+
+# 1. Handle Missing Values
+median_revenue = df['Revenue'].median()
+
+df['Revenue'].fillna(median_revenue, inplace=True)
+df['Product'].fillna("Unknown", inplace=True)
+
+print("\nDataFrame After Handling Missing Values:\n")
+print(df)
+
+# 2. Feature Engineering
+df['Profit'] = df['Revenue'] - df['Cost']
+
+df['Margin_Percentage'] = (df['Profit'] / df['Revenue']) * 100
+
+print("\nDataFrame After Feature Engineering:\n")
+print(df)
+
+# 3. Filtering
+df['Date'] = pd.to_datetime(df['Date'])
+
+q4_data = df[
+    (df['Date'].dt.quarter == 4) &
+    (df['Profit'] > 50)
+]
+
+print("\nQ4 Products with Profit > 50:\n")
+print(q4_data)
+
+
+
+# =========================
+# Assignment 3: Grouping & Pivot Tables
+# =========================
+
+import pandas as pd
+
+# Dataset
+employee_data = {
+    'Dept': ['IT', 'HR', 'IT', 'Sales', 'HR', 'IT', 'Sales', 'Sales'],
+    'Status': ['FT', 'FT', 'Contract', 'FT', 'Contract', 'FT', 'Contract', 'FT'],
+    'Salary': [95000, 60000, 70000, 80000, 55000, 98000, 72000, 85000]
+}
+
+emp_df = pd.DataFrame(employee_data)
+
+print("Employee Data:\n")
+print(emp_df)
+
+# 1. Group by Dept and calculate average and maximum salary
+grouped_data = emp_df.groupby('Dept')['Salary'].agg(['mean', 'max'])
+
+print("\nAverage and Maximum Salary by Department:\n")
+print(grouped_data)
+
+# 2. Create Pivot Table
+pivot_table = pd.pivot_table(
+    emp_df,
+    index='Dept',
+    columns='Status',
+    values='Salary',
+    aggfunc='count',
+    fill_value=0
+)
+
+print("\nPivot Table:\n")
+print(pivot_table)
+
+# 3. Sort pivot table by Contract workers
+sorted_pivot = pivot_table.sort_values(by='Contract', ascending=False)
+
+print("\nDepartments Sorted by Contract Workers:\n")
+print(sorted_pivot)
+
+
+
+# Import required libraries
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load the built-in dataset
+tips = sns.load_dataset('tips')
+
+# ==============================
+# 1. Histogram using displot
+# ==============================
+
+sns.displot(
+    data=tips,
+    x='total_bill',
+    kde=True,
+    color='darkblue'
+)
+
+plt.title("Distribution of Total Bill")
+plt.xlabel("Total Bill")
+plt.ylabel("Count")
+
+plt.show()
+
+
+# ==============================
+# 2. JointPlot with Regression Line
+# ==============================
+
+sns.jointplot(
+    data=tips,
+    x='total_bill',
+    y='tip',
+    kind='reg'
+)
+
+plt.show()
+
+
+# ==============================
+# 3. BoxPlot
+# ==============================
+
+plt.figure(figsize=(8, 5))
+
+sns.boxplot(
+    data=tips,
+    x='day',
+    y='total_bill',
+    hue='smoker'
+)
+
+plt.title("Total Bill Across Different Days")
+plt.xlabel("Day")
+plt.ylabel("Total Bill")
+
+plt.show()
+
+
+
+
+# Import matplotlib
+import matplotlib.pyplot as plt
+
+# Dataset
+cities = ['Chennai', 'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad']
+sales_values = [450, 600, 520, 780, 410]
+
+categories = ['Electronics', 'Fashion', 'Groceries', 'Home Decor']
+market_share = [35, 25, 30, 10]
+
+# Create figure with 2 subplots
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+# =================================
+# 1. Bar Chart
+# =================================
+
+axes[0].bar(cities, sales_values, color='teal')
+
+axes[0].set_title("City Sales")
+axes[0].set_xlabel("Cities")
+axes[0].set_ylabel("Sales Values")
+
+# Add grid on Y-axis
+axes[0].grid(axis='y')
+
+# =================================
+# 2. Pie Chart
+# =================================
+
+explode = (0.1, 0, 0, 0)
+
+axes[1].pie(
+    market_share,
+    labels=categories,
+    explode=explode,
+    autopct='%1.1f%%'
+)
+
+axes[1].set_title("Market Share")
+
+# =================================
+# Main Title
+# =================================
+
+fig.suptitle("Regional Sales & Category Analysis")
+
+# Adjust layout
+plt.tight_layout()
+
+# Show plots
+plt.show()  
