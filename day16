@@ -162,38 +162,25 @@ DataFrame After Handling Missing Values:
 2   Monitor    300.0   200  2025-03-20
 3  Keyboard     75.0    40  2025-10-05
 4    Laptop   1150.0   850  2025-11-12
-5     Mouse      NaN    15  2025-12-25
-6       NaN    150.0   100  2025-06-01
+5     Mouse    225.0    15  2025-12-25
+6   Unknown    150.0   100  2025-06-01
 
 DataFrame After Feature Engineering:
 
-C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 16\assignment2_pandas.py:24: ChainedAssignmentError: A value is being set on a copy of a DataFrame or Series through chained assignment using an inplace method.
-Such inplace method never works to update the original DataFrame or Series, because the intermediate object on which we are setting values always behaves as a copy (due to Copy-on-Write).
-
-For example, when doing 'df[col].method(value, inplace=True)', try using 'df.method({col: value}, inplace=True)' instead, to perform the operation inplace on the original object, or try to avoid an inplace operation using 'df[col] = df[col].method(value)'.
-
-See the documentation for a more detailed explanation: https://pandas.pydata.org/pandas-docs/stable/user_guide/copy_on_write.html
-  df['Revenue'].fillna(median_revenue, inplace=True)
-C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 16\assignment2_pandas.py:25: ChainedAssignmentError: A value is being set on a copy of a DataFrame or Series through chained assignment using an inplace method.
-Such inplace method never works to update the original DataFrame or Series, because the intermediate object on which we are setting values always behaves as a copy (due to Copy-on-Write).
-
-For example, when doing 'df[col].method(value, inplace=True)', try using 'df.method({col: value}, inplace=True)' instead, to perform the operation inplace on the original object, or try to avoid an inplace operation using 'df[col] = df[col].method(value)'.
-
-See the documentation for a more detailed explanation: https://pandas.pydata.org/pandas-docs/stable/user_guide/copy_on_write.html
-  df['Product'].fillna("Unknown", inplace=True)
     Product  Revenue  Cost        Date  Profit  Margin_Percentage
 0    Laptop   1200.0   800  2025-01-10   400.0          33.333333
 1     Mouse     25.0    10  2025-02-15    15.0          60.000000
 2   Monitor    300.0   200  2025-03-20   100.0          33.333333
 3  Keyboard     75.0    40  2025-10-05    35.0          46.666667
 4    Laptop   1150.0   850  2025-11-12   300.0          26.086957
-5     Mouse      NaN    15  2025-12-25     NaN                NaN
-6       NaN    150.0   100  2025-06-01    50.0          33.333333
+5     Mouse    225.0    15  2025-12-25   210.0          93.333333
+6   Unknown    150.0   100  2025-06-01    50.0          33.333333
 
 Q4 Products with Profit > 50:
 
   Product  Revenue  Cost       Date  Profit  Margin_Percentage
 4  Laptop   1150.0   850 2025-11-12   300.0          26.086957
+5   Mouse    225.0    15 2025-12-25   210.0          93.333333
 
 Process finished with exit code 0
 
