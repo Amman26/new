@@ -93,54 +93,6 @@ Process finished with exit code 0
 
 
 
-# =========================
-# Assignment 2: Pandas Data Cleaning & Transformation
-# =========================
-
-import pandas as pd
-
-# Dataset
-raw_data = {
-    'Product': ['Laptop', 'Mouse', 'Monitor', 'Keyboard', 'Laptop', 'Mouse', None],
-    'Revenue': [1200, 25, 300, 75, 1150, None, 150],
-    'Cost': [800, 10, 200, 40, 850, 15, 100],
-    'Date': ['2025-01-10', '2025-02-15', '2025-03-20',
-             '2025-10-05', '2025-11-12', '2025-12-25', '2025-06-01']
-}
-
-df = pd.DataFrame(raw_data)
-
-print("Original DataFrame:\n")
-print(df)
-
-# 1. Handle Missing Values
-median_revenue = df['Revenue'].median()
-
-df['Revenue'].fillna(median_revenue, inplace=True)
-df['Product'].fillna("Unknown", inplace=True)
-
-print("\nDataFrame After Handling Missing Values:\n")
-print(df)
-
-# 2. Feature Engineering
-df['Profit'] = df['Revenue'] - df['Cost']
-
-df['Margin_Percentage'] = (df['Profit'] / df['Revenue']) * 100
-
-print("\nDataFrame After Feature Engineering:\n")
-print(df)
-
-# 3. Filtering
-df['Date'] = pd.to_datetime(df['Date'])
-
-q4_data = df[
-    (df['Date'].dt.quarter == 4) &
-    (df['Profit'] > 50)
-]
-
-print("\nQ4 Products with Profit > 50:\n")
-print(q4_data)
-
 
 # =========================
 # Assignment 2: Pandas Data Cleaning & Transformation
@@ -189,6 +141,62 @@ q4_data = df[
 
 print("\nQ4 Products with Profit > 50:\n")
 print(q4_data)
+
+"C:\Program Files\Python314\python.exe" "C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 16\assignment2_pandas.py" 
+Original DataFrame:
+
+    Product  Revenue  Cost        Date
+0    Laptop   1200.0   800  2025-01-10
+1     Mouse     25.0    10  2025-02-15
+2   Monitor    300.0   200  2025-03-20
+3  Keyboard     75.0    40  2025-10-05
+4    Laptop   1150.0   850  2025-11-12
+5     Mouse      NaN    15  2025-12-25
+6       NaN    150.0   100  2025-06-01
+
+DataFrame After Handling Missing Values:
+
+    Product  Revenue  Cost        Date
+0    Laptop   1200.0   800  2025-01-10
+1     Mouse     25.0    10  2025-02-15
+2   Monitor    300.0   200  2025-03-20
+3  Keyboard     75.0    40  2025-10-05
+4    Laptop   1150.0   850  2025-11-12
+5     Mouse      NaN    15  2025-12-25
+6       NaN    150.0   100  2025-06-01
+
+DataFrame After Feature Engineering:
+
+C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 16\assignment2_pandas.py:24: ChainedAssignmentError: A value is being set on a copy of a DataFrame or Series through chained assignment using an inplace method.
+Such inplace method never works to update the original DataFrame or Series, because the intermediate object on which we are setting values always behaves as a copy (due to Copy-on-Write).
+
+For example, when doing 'df[col].method(value, inplace=True)', try using 'df.method({col: value}, inplace=True)' instead, to perform the operation inplace on the original object, or try to avoid an inplace operation using 'df[col] = df[col].method(value)'.
+
+See the documentation for a more detailed explanation: https://pandas.pydata.org/pandas-docs/stable/user_guide/copy_on_write.html
+  df['Revenue'].fillna(median_revenue, inplace=True)
+C:\Wipro Training\Python\PythonCoding\Daily Assignments\Day 16\assignment2_pandas.py:25: ChainedAssignmentError: A value is being set on a copy of a DataFrame or Series through chained assignment using an inplace method.
+Such inplace method never works to update the original DataFrame or Series, because the intermediate object on which we are setting values always behaves as a copy (due to Copy-on-Write).
+
+For example, when doing 'df[col].method(value, inplace=True)', try using 'df.method({col: value}, inplace=True)' instead, to perform the operation inplace on the original object, or try to avoid an inplace operation using 'df[col] = df[col].method(value)'.
+
+See the documentation for a more detailed explanation: https://pandas.pydata.org/pandas-docs/stable/user_guide/copy_on_write.html
+  df['Product'].fillna("Unknown", inplace=True)
+    Product  Revenue  Cost        Date  Profit  Margin_Percentage
+0    Laptop   1200.0   800  2025-01-10   400.0          33.333333
+1     Mouse     25.0    10  2025-02-15    15.0          60.000000
+2   Monitor    300.0   200  2025-03-20   100.0          33.333333
+3  Keyboard     75.0    40  2025-10-05    35.0          46.666667
+4    Laptop   1150.0   850  2025-11-12   300.0          26.086957
+5     Mouse      NaN    15  2025-12-25     NaN                NaN
+6       NaN    150.0   100  2025-06-01    50.0          33.333333
+
+Q4 Products with Profit > 50:
+
+  Product  Revenue  Cost       Date  Profit  Margin_Percentage
+4  Laptop   1150.0   850 2025-11-12   300.0          26.086957
+
+Process finished with exit code 0
+
 
 
 # =========================
